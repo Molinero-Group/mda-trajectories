@@ -1,0 +1,89 @@
+LAMMPS (29 Sep 2021 - Update 3)
+  using 1 OpenMP thread(s) per MPI task
+Let's play with LAMMPS!
+Seed: 5299
+Reading data file ...
+  orthogonal box = (3.3460864 3.3460864 3.3460864) to (61.653914 61.653914 61.653914)
+  4 by 4 by 4 MPI processor grid
+  reading atoms ...
+  8000 atoms
+  read_data CPU = 0.017 seconds
+Changing box ...
+  triclinic box = (3.3460864 3.3460864 3.3460864) to (61.653914 61.653914 61.653914) with tilt (0.0000000 0.0000000 0.0000000)
+Reading tersoff potential file /uufs/chpc.utah.edu/common/home/u6030870/Softwares/pot_files/WT_ML-BOP.tersoff with DATE: 2018-05-25
+Initial Length, L0: 58.3078271552
+Neighbor list info ...
+  update every 5 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 5.553272
+  ghost atom cutoff = 5.553272
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair tersoff, perpetual
+      attributes: full, newton on
+      pair build: full/nsq
+      stencil: none
+      bin: none
+Per MPI rank memory allocation (min/avg/max) = 3.054 | 3.054 | 3.054 Mbytes
+Step Temp Pyy Pzz Pyz Lz Yz TotEng PotEng KinEng Enthalpy Density Press 
+       0           77    2649.5552    2303.7857   -13.513788    58.307827            0   -74574.919   -76410.868    1835.9495   -67544.449    1.2072577    2431.8003 
+Loop time of 5.21615e-05 on 64 procs for 0 steps with 8000 atoms
+
+1.1% CPU use with 64 MPI tasks x 1 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 5.216e-05  |            |       |100.00
+
+Nlocal:        125.000 ave         134 max         112 min
+Histogram: 1 2 0 6 5 20 14 9 5 2
+Nghost:        558.547 ave         576 max         546 min
+Histogram: 4 5 10 10 13 8 3 9 1 1
+Neighs:         0.00000 ave           0 max           0 min
+Histogram: 64 0 0 0 0 0 0 0 0 0
+FullNghs:      3303.44 ave        3576 max        2952 min
+Histogram: 1 2 2 4 15 12 14 11 1 2
+
+Total # of neighbors = 211420
+Ave neighs/atom = 26.427500
+Neighbor list builds = 0
+Dangerous builds = 0
+Per MPI rank memory allocation (min/avg/max) = 4.449 | 4.449 | 4.449 Mbytes
+Step Temp Pyy Pzz Pyz Lz Yz TotEng PotEng KinEng Enthalpy Density Press 
+       0           77    2649.5552    2303.7857   -13.513788    58.307827            0   -74574.919   -76410.868    1835.9495   -67544.449    1.2072577    2431.8003 
+    9600    81.560412    3785.1009    3685.8618   -4779.7327    200.99836   -6.5686101   -70686.146   -72630.832    1944.6857   -60125.634    1.2350153    3736.8089 
+Loop time of 13.8009 on 64 procs for 9600 steps with 8000 atoms
+
+Performance: 300.503 ns/day, 0.080 hours/ns, 695.609 timesteps/s
+99.6% CPU use with 64 MPI tasks x 1 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 10.6       | 10.733     | 11.027     |   2.3 | 77.77
+Neigh   | 0.46297    | 0.46747    | 0.47057    |   0.2 |  3.39
+Comm    | 1.4027     | 1.6268     | 1.7502     |   5.8 | 11.79
+Output  | 0.019302   | 0.045081   | 0.071926   |   7.5 |  0.33
+Modify  | 0.82886    | 0.91405    | 0.97284    |   3.2 |  6.62
+Other   |            | 0.01492    |            |       |  0.11
+
+Nlocal:        125.000 ave         136 max         115 min
+Histogram: 3 3 8 12 11 8 7 6 2 4
+Nghost:        914.875 ave         934 max         895 min
+Histogram: 1 6 3 10 13 10 8 4 4 5
+Neighs:         0.00000 ave           0 max           0 min
+Histogram: 64 0 0 0 0 0 0 0 0 0
+FullNghs:      3502.41 ave        3823 max        3240 min
+Histogram: 3 5 8 13 10 8 7 5 2 3
+
+Total # of neighbors = 224154
+Ave neighs/atom = 28.019250
+Neighbor list builds = 1048
+Dangerous builds = 851
+Simulation complete!
+Total wall time: 0:00:14
