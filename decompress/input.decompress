@@ -1,0 +1,63 @@
+# ----------------------------- Initialization
+
+print                           "Let's play with LAMMPS!"
+
+dimension                       3
+units                           real
+boundary                        p p p                           # periodic in x, y, z
+atom_style                      atomic                            # molecular + charge 
+
+variable                        dt equal 5.0 # in femtoseconds = 0.001 picoseconds
+
+variable                        T equal 77.0
+
+variable                        P_end equal 0.0
+variable                        P_ini equal 12000.0
+
+print                           "Seed: ${seed}"
+
+read_data                       HDA_77K_10Mpa_ns.data
+
+change_box                      all triclinic
+
+#**************************FF DETAILS*******************************
+pair_style     tersoff
+pair_coeff     * * /uufs/chpc.utah.edu/common/home/u6030870/Softwares/pot_files/WT_ML-BOP.tersoff WT
+
+#************************ Initialize *******************************
+neighbor       2.0 nsq
+neigh_modify   delay 10 every 5 check yes
+timestep       ${dt}
+
+# ----------------------------- Run a simulation
+
+############################### perform MD
+
+velocity                        all create ${T} ${seed} dist gaussian
+
+fix                              npt all npt temp ${T} ${T} 100.0 iso ${P_ini} ${P_end} 1000.0 
+############################### deformations
+
+thermo_style                    custom step temp etotal enthalpy density press vol pe
+thermo 10000
+thermo_modify norm yes
+
+variable          temp equal "temp"
+variable          etotal equal "etotal"
+variable          enthalpy equal "enthalpy"
+variable          density equal "density"
+variable          press equal "press"
+variable          vol equal "vol"
+variable          pe equal "pe"
+
+fix printave all ave/time 1 999 1000 v_temp v_etotal v_enthalpy v_density v_press v_vol v_pe file ave.log
+
+dump              myDump all custom 100000 dump.atom id x y z
+
+restart           1000000 restart.simu        # every 1ns write a restart file
+
+run               24000000 # 120 ns
+
+# simulation done
+print                           "Simulation complete!"
+
