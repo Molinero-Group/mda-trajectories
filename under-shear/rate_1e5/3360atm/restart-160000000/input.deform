@@ -1,0 +1,87 @@
+# ----------------------------- Initialization
+
+print                           "Let's play with LAMMPS!"
+
+dimension                       3
+units                           real
+boundary                        p p p                           # periodic in x, y, z
+atom_style                      atomic                            # molecular + charge 
+
+variable                        dt equal 5.0 # in femtoseconds = 0.001 picoseconds
+
+variable                        T equal 77.0
+
+variable                        P equal 3360.0
+
+print                           "Seed: ${seed}"
+
+#read_data iconf.data 
+read_restart                    restart.simu.160000000 
+change_box                      all triclinic
+
+#**************************FF DETAILS*******************************
+pair_style     tersoff
+pair_coeff     * * /uufs/chpc.utah.edu/common/home/u6030870/Softwares/pot_files/WT_ML-BOP.tersoff WT
+
+#************************ Initialize *******************************
+neighbor       2.0 nsq
+neigh_modify   delay 10 every 5 check yes
+timestep       ${dt}
+
+# ----------------------------- Run a simulation
+
+############################### perform MD
+
+#velocity                        all create ${T} ${seed} dist gaussian
+
+#fix                             nvt all nvt temp ${T} ${T} $(100.0*dt)
+#fix                              npt all npt temp ${T} ${T} 100.0 iso ${P} ${P} 1000.0 
+#fix                              npt all npt temp ${T} ${T} 100.0 x ${P} ${P} 1000.0 y ${P} ${P} 1000.0
+fix                              npt all npt temp ${T} ${T} 100.0 x ${P} ${P} 1000.0 y ${P} ${P} 1000.0 z ${P} ${P} 1000.0 couple none
+############################### deformations
+
+thermo_style                    custom step temp pyy pzz pyz lz yz etotal pe ke enthalpy density press
+
+# Store final cell length for strain calculations
+variable tmp equal "lz"
+variable L0 equal 71.3265691582 
+print "Initial Length, L0: ${L0}"
+
+run 0
+
+##-------------Running deformation----------------
+
+#convert between LAMMPS notation and our usual stress tensor definition
+# with stresses positive when forces are pointing along the norm of the side.
+
+thermo 10000000
+
+variable          strain equal "yz/v_L0"
+
+variable          sigmayy equal "-pyy/9869.2326671600" # atm to GPa
+variable          sigmazz equal "-pzz/9869.2326671600" # atm to GPa
+
+#shear-stress
+variable          sigmayz equal "-pyz/9869.2326671600" # atm to GPa
+
+variable          temp equal "temp"
+variable          etotal equal "etotal"
+variable          pe equal "pe"
+variable          ke equal "ke"
+variable          enthalpy equal "enthalpy"
+variable          density equal "density"
+variable          press equal "press"
+
+fix printave all ave/time 1 999 1000 v_temp v_strain v_sigmayy v_sigmazz v_sigmayz v_etotal v_pe v_ke v_enthalpy v_density v_press file ave.log
+
+fix               deform all deform 1 yz final $(v_L0*1.0) remap x flip yes # tilt
+
+dump              myDump all custom 1000000 dump.atom x y z id
+
+restart           10000000 restart.simu        # every 1ns write a restart file
+
+run               2000000000 # it depends of the desired stress-rate=10*10^7s^-1 
+
+
+
+
